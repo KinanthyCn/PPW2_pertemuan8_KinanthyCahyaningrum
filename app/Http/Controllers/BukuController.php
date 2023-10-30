@@ -53,13 +53,14 @@ class BukuController extends Controller
         return view('buku.edit', compact('data_buku'));
     }
     //update
-    public function update(Request $request)
+    public function update(Request $request, string $id)
     {
-        $this->validate($request,[
-            'judul' => 'required|string',
-            'penulis' => 'required|string|max:30',
-            'harga' => 'required|numeric',
-            'tgl_terbit' => 'required|date'
+        $buku = Buku::find($id);
+        $buku->update([
+            'judul' => $request->nama,
+            'penulis' => $request->penulis,
+            'harga' => $request->harga,
+            'tgl_terbit' => $request->tgl_terbit
         ]);
         return redirect('/buku')->with('pesan', 'Data Buku Berhasil di Edit');
     }
