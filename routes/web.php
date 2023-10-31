@@ -27,11 +27,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
 
-require __DIR__.'/auth.php';
 
-Route::get('/buku', [BukuController::class, 'index']);
+    Route::get('/buku', [BukuController::class, 'index']);
 
 
 Route::get('/buku/create', [BukuController::class, 'create'])->name('buku.create');
@@ -50,3 +48,8 @@ Route::get('/buku/edit/{id}', [BukuController::class, 'edit'])->name('buku.edit'
 Route::post('/buku/update/{id}', [BukuController::class, 'update'])->name('buku.update');
 
 Route::get('/buku/search', [BukuController::class, 'search'])->name('buku.search');
+});
+
+require __DIR__.'/auth.php';
+
+
