@@ -107,6 +107,12 @@ class BukuController extends Controller
         return view('buku.search', compact('data_buku', 'no', 'total', 'totalbuku','cari'));
     }
 
+
+     public function __construct() {
+        $this->middleware('auth');// Memaksa autentikasi pengguna sebelum 
+        //mengakses tindakan dalam controller ini
+    }
+
     /**
      * Remove the specified resource from storage.
      */
