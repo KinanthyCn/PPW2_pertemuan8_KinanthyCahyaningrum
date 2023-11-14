@@ -43,6 +43,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/buku/edit/{id}', [BukuController::class, 'edit'])->name('buku.edit');
         //store update
         Route::post('/buku/update/{id}', [BukuController::class, 'update'])->name('buku.update');
+        Route::get('/buku/delete-gallery/{id}', [BukuController::class, 'deleteGallery'])->name('buku.delete-gallery');
     });
 
 

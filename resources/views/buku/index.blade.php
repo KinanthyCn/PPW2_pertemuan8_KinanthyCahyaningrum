@@ -23,6 +23,7 @@
     <table class="table table-striped">
         <thead>
             <tr>
+                <th> Gambar</th>
                 <th> id</th>
                 <th> Judul Buku</th>
                 <th> Penulis</th>
@@ -34,7 +35,18 @@
 </thead>
 <tbody>
     @foreach($data_buku as $buku)
+
+
     <tr>
+        <td> @if ($buku->filepath)
+    <div class="relative h-13 w-13">
+        <img 
+        class="" 
+        src="{{ asset($buku->filepath) }}" 
+        alt="">
+    </div>
+
+    @endif </td>
         <td>{{ $buku->id}}</td>
         <td>{{ $buku->judul}}</td>
         <td>{{ $buku->penulis}}</td>
@@ -52,6 +64,7 @@
             </p>
     </td>
     </tr>
+
 @endforeach
 </tbody>
 </table>
