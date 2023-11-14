@@ -82,24 +82,27 @@ class BukuController extends Controller
     public function update(Request $request, string $id)
     {
         $buku = Buku::find($id);
-        $request->validate([
-            'thumbnail' => 'image|mimes:jpeg,png,jpg|max:2048'
-        ]);
-        $fileName = time().'.'.$request->thumbnail->getClientOriginalName();
-        $filePath = $request->file('thumbnail')->storeAs('uploads', $fileName, 'public');
-
-        Image::make(storage_path('app/public/uploads/'.$fileName))
-        ->fit(240, 320) 
-        ->save();
-
-        $buku->update([
-            'judul' => $request->nama,
-            'penulis' => $request->penulis,
-            'harga' => $request->harga,
-            'tgl_terbit' => $request->tgl_terbit,
-            'filename' => $fileName,
-            'filepath' => '/storage/' . $filePath
-        ]);
+        if ($request->file('thumbnail')) {
+            $request->validate([
+                'thumbnail' => 'image|mimes:jpeg,png,jpg|max:2048'
+            ]);
+            $fileName = time().'.'.$request->thumbnail->getClientOriginalName();
+            $filePath = $request->file('thumbnail')->storeAs('uploads', $fileName, 'public');
+    
+            Image::make(storage_path('app/public/uploads/'.$fileName))
+            ->fit(240, 320) 
+            ->save();
+    
+            $buku->update([
+                'judul' => $request->nama,
+                'penulis' => $request->penulis,
+                'harga' => $request->harga,
+                'tgl_terbit' => $request->tgl_terbit,
+                'filename' => $fileName,
+                'filepath' => '/storage/' . $filePath
+            ]);
+        }
+        
         if ($request->file('gallery')) {
             foreach($request->file('gallery') as $key => $file) {
                 $fileName = time().'_'.$file->getClientOriginalName();
