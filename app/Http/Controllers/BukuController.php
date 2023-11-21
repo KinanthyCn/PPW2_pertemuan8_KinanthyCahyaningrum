@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Buku;
 use App\Models\Gallery;
+use DB;
 use Illuminate\Http\Request;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
@@ -45,29 +46,46 @@ class BukuController extends Controller
         Image::make(storage_path('app/public/uploads/'.$fileName))
         ->fit(240, 320) 
         ->save();
+
+        DB::beginTransaction();
         
-        $buku =Buku::create([
-            'judul' => $request->judul,
-            'penulis' => $request->penulis,
-            'harga' => $request->harga,
-            'tgl_terbit' => $request->tgl_terbit,
-            'filename' => $fileName,
-            'filepath' => '/storage/' . $filePath
-        ]);
-
-        if ($request->file('gallery')) {
-            foreach($request->file('gallery') as $key => $file) {
-                $fileName = time().'_'.$file->getClientOriginalName();
-                $filePath = $file->storeAs('uploads', $fileName, 'public');
-
-                $gallery = Gallery::create([
-                    'nama_galeri'   => $fileName,
-                    'path'          => '/storage/' . $filePath,
-                    'foto'          => $fileName,
-                    'buku_id'       => $buku->id
-                ]);
-            }
+        try {
+            //code...
+            $buku =Buku::create([
+                'judul' => $request->judul,
+                'penulis' => $request->penulis,
+                'harga' => $request->harga,
+                'tgl_terbit' => $request->tgl_terbit,
+                'filename' => $fileName,
+                'filepath' => '/storage/' . $filePath
+            ]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollBack();
         }
+
+        try {
+            //code...
+            if ($request->file('gallery')) {
+                foreach($request->file('gallery') as $key => $file) {
+                    $fileName = time().'_'.$file->getClientOriginalName();
+                    $filePath = $file->storeAs('uploads', $fileName, 'public');
+    
+                    $gallery = Gallery::create([
+                        'nama_galeri'   => $fileName,
+                        'path'          => '/storage/' . $filePath,
+                        'foto'          => $fileName,
+                        'buku_id'       => $buku->id
+                    ]);
+                }
+            }
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollBack();
+        }
+
+        DB::commit();
+
         return redirect('/buku')->with('pesan', 'Data Buku Berhasil di Simpan');
 
 
@@ -174,6 +192,17 @@ class BukuController extends Controller
         Storage::delete('public/'.$gallery->path);
         $gallery->delete();
         return redirect()->back()->with('pesan', 'Foto Berhasil di Hapus');
+    }
+
+    public function showList(){
+        $data_buku = Buku::all();
+        return view('buku.list_buku', compact('data_buku'));
+    }
+
+
+    public function galBuku($id){
+        $data_buku= Buku::find($id);
+        return view('buku.galbuku', compact('data_buku'));
     }
 
     /**

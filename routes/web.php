@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\BukuController;
+use App\Http\Controllers\PublicController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -29,7 +30,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
 
-    Route::get('/buku', [BukuController::class, 'index']);
+    Route::get('/buku', [BukuController::class, 'index'])->name('buku');
 
     Route::get('/buku/search', [BukuController::class, 'search'])->name('buku.search');
 
@@ -45,9 +46,11 @@ Route::middleware('auth')->group(function () {
         Route::post('/buku/update/{id}', [BukuController::class, 'update'])->name('buku.update');
         Route::get('/buku/delete-gallery/{id}', [BukuController::class, 'deleteGallery'])->name('buku.delete-gallery');
     });
-
+    
 
 });
+    Route::get('/list_buku', [BukuController::class, 'showList'])->name('buku.list_buku');
+    Route::get('/detail_buku/{id}', [BukuController::class, 'galbuku'])->name('buku.galeri.buku');
 
 require __DIR__.'/auth.php';
 

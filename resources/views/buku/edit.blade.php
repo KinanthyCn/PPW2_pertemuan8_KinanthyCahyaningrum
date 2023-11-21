@@ -1,3 +1,5 @@
+<x-app-layout>
+
 <div class="container">
 <h4>Update Buku</h4>
     @if (count($errors) > 0)
@@ -83,3 +85,5 @@
 
 </form>
 </div>
+
+</x-app-layout>
