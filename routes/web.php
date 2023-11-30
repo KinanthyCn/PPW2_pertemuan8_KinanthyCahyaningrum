@@ -33,6 +33,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/buku', [BukuController::class, 'index'])->name('buku');
 
     Route::get('/buku/search', [BukuController::class, 'search'])->name('buku.search');
+    Route::get('/list_buku', [BukuController::class, 'showList'])->name('buku.list_buku');
+    Route::get('detail_buku/{id}',[BukuController::class, 'galBuku'])->name('buku.galeri.buku');
+    Route::match(['get', 'post'], '/buku/detail/{id}/rate', [BukuController::class, 'ratingBuku'])->name('buku.rating');
+
+    Route::get('/buku/favorite', [BukuController::class, 'showFavoriteBuku'])->name('buku.showFavorite');
+    Route::post('/buku/favorite/{id}', [BukuController::class, 'favoriteBuku'])->name('buku.favorite');
+
+
 
     Route::middleware('admin')->group(function () {
         Route::get('/buku/create', [BukuController::class, 'create'])->name('buku.create');
@@ -49,8 +57,8 @@ Route::middleware('auth')->group(function () {
     
 
 });
-    Route::get('/list_buku', [BukuController::class, 'showList'])->name('buku.list_buku');
-    Route::get('/detail_buku/{id}', [BukuController::class, 'galbuku'])->name('buku.galeri.buku');
+    Route::get('/list_buku', [PublicController::class, 'showList'])->name('buku.list_buku');
+    Route::get('/detail_buku/{id}', [PublicController::class, 'galbuku'])->name('buku.galeri.buku');
 
 require __DIR__.'/auth.php';
 

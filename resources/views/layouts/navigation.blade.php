@@ -22,6 +22,16 @@
                         {{ __('Daftar Buku') }}
                     </x-nav-link>
                 </div>
+                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                    <x-nav-link :href="route('buku.list_buku')" :active="request()->routeIs('bukuS')">
+                        {{ __('List Buku') }}
+                    </x-nav-link>
+                </div>
+                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                    <x-nav-link :href="route('buku.showFavorite')" :active="request()->routeIs('bukuS')">
+                        {{ __('Buku Favoritku') }}
+                    </x-nav-link>
+                </div>
             </div>
 
             <!-- Settings Dropdown -->

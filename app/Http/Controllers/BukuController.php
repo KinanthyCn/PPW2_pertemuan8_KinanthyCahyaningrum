@@ -8,6 +8,11 @@ use DB;
 use Illuminate\Http\Request;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Rating;
+use Illuminate\Support\Facades\Auth;
+use App\Models\User;
+
+
 
 class BukuController extends Controller
 {
@@ -60,7 +65,7 @@ class BukuController extends Controller
                 'filepath' => '/storage/' . $filePath
             ]);
         } catch (\Throwable $th) {
-            //throw $th;
+            throw $th;
             DB::rollBack();
         }
 
@@ -80,7 +85,7 @@ class BukuController extends Controller
                 }
             }
         } catch (\Throwable $th) {
-            //throw $th;
+            throw $th;
             DB::rollBack();
         }
 
@@ -203,6 +208,65 @@ class BukuController extends Controller
     public function galBuku($id){
         $data_buku= Buku::find($id);
         return view('buku.galbuku', compact('data_buku'));
+    }
+    public function ratingBuku(Request $request, $id)
+    {
+        $data_buku = Buku::find($id);
+    
+        $existingRating = Rating::where('user_id', Auth::id())
+                                ->where('buku_id', $id)
+                                ->first();
+    
+        if ($existingRating) {
+            $request->validate([
+                'rating' => 'required|numeric|min:1|max:5',
+            ]);
+    
+            $existingRating->update([
+                'rating' => $request->rating,
+            ]);
+    
+            return redirect()->back()->with('pesan', 'Your rating has been updated successfully.');
+        }
+    
+        $request->validate([
+            'rating' => 'required|numeric|min:1|max:5',
+        ]);
+    
+        $newRating = new Rating([
+            'buku_id' => $id,
+            'user_id' => Auth::id(),
+            'rating' => $request->rating,
+        ]);
+    
+        $newRating->save();
+    
+        return redirect()->route('buku.galeri.buku', $id)->with('pesan', 'rating anda telah ditambahkan.');
+    }
+    public function favoriteBuku($id)
+    {
+        $userId = Auth::id();
+        $data_buku = Buku::findOrFail($id);
+    
+        $user = User::find($userId);
+    
+        if ($user->favorites()->toggle($data_buku)) {
+            return redirect()->back()->with('pesan', 'Book added to favorites.');
+        } else {
+            return redirect()->back()->with('pesan', 'Book removed from favorites.');
+        }
+    }
+    public function showFavoriteBuku()
+    {
+        $userId = Auth::id();
+        $user = User::find($userId);
+
+        $batas = 10;
+
+        $favoriteBooks = $user->favorites()->paginate($batas);
+        $no = $batas * ($favoriteBooks->currentPage() - 1);
+
+        return view('buku.favorite', compact('favoriteBooks', 'no'));
     }
 
     /**

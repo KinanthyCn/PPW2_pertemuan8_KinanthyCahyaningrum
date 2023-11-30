@@ -17,6 +17,7 @@ class Buku extends Model
         'tgl_terbit',
         'filename',
         'filepath'
+
     ];
     protected $dates =['tgl_terbit'];
     public function galeri(){
@@ -25,5 +26,14 @@ class Buku extends Model
     public function photos(){
         return $this->hasMany('App\Buku','id_buku','id');
     }
+    public function ratings()
+    {
+        return $this->hasMany(Rating::class);
+    }
+    public function favoritedBy()
+    {
+        return $this->belongsToMany(User::class, 'favorites')->withTimestamps();
+    }
+
 
 }
