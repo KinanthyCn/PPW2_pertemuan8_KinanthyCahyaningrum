@@ -35,22 +35,23 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($favoriteBooks as $buku)
+                        @foreach($favoriteBooks as $data_favorite)
                         <tr>
+                            <td>{{ $data_favorite->id }}</td>
                             <td>
-                                <a href="{{ route('buku.showFavorite', $buku->id) }}">
+                                <a href="{{ route('buku.showFavorite', $data_favorite->id) }}">
                                     <div class="flex items-center">
-                                        @if ($buku->filepath)
+                                        @if ($data_favorite->filepath)
                                         <div class="relative h-10 w-10">
                                             <img class="h-full w-full rounded-full object-cover object-center"
-                                                src="{{ asset($buku->filepath) }}" alt="thumbnail" />
+                                                src="{{ asset($data_favorite->filepath) }}" alt="thumbnail" />
                                         </div>
                                         @endif
-                                        <span class="ml-2">{{ $buku->judul }}</span>
+                                        <span class="ml-2">{{ $data_favorite->judul }}</span>
                                     </div>
                                 </a>
                             </td>
-                            <td>{{ $buku->penulis }}</td>
+                            <td>{{ $data_favorite->penulis }}</td>
                         </tr>
                         @endforeach
                     </tbody>
