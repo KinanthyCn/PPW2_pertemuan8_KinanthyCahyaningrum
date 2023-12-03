@@ -28,7 +28,8 @@
                 <table class="table table-striped table-bordered table-fixed">
                     <thead>
                         <tr>
-                            <th scope="col" style="width: 50px;">No.</th>
+                            <th scope="col">ID</th>
+                            <th scope="col">Thumbnail</th>
                             <th scope="col">Judul Buku</th>
                             <th scope="col">Penulis</th>
                         </tr>
@@ -36,7 +37,6 @@
                     <tbody>
                         @foreach($favoriteBooks as $buku)
                         <tr>
-                            <td>{{ ++$no }}</td>
                             <td>
                                 <a href="{{ route('buku.showFavorite', $buku->id) }}">
                                     <div class="flex items-center">

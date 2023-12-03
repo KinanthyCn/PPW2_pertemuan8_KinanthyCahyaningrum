@@ -244,7 +244,7 @@ class BukuController extends Controller
     
         return redirect()->route('buku.galeri.buku', $id)->with('pesan', 'rating anda telah ditambahkan.');
     }
-    public function FavoriteBuku($id)
+    public function favoriteBuku($id)
 {
     if (Auth::check()) {
         $user = Auth::user();
@@ -261,15 +261,13 @@ class BukuController extends Controller
             ]);
             $favorite->save();
 
-            return redirect()->back()->with('success', 'Book added to favorites successfully.');
+            return redirect()->back()->with('pesan', 'Book added to favorites successfully.');
         } else {
-            return redirect()->back()->with('error', 'Book is already in favorites.');
+            return redirect()->back()->with('pesan', 'Book is already in favorites.');
         }
     } else {
         // Handle the case when the user is not logged in
-        // You can redirect to the login page or perform any other action
-        // For example:
-        return redirect()->route('login')->with('error', 'You need to log in to add books to favorites.');
+        return redirect()->route('login')->with('pesan', 'You need to log in to add books to favorites.');
     }
 }
 
@@ -277,15 +275,13 @@ public function showFavoriteBuku()
 {
     if (Auth::check()) {
         $user = Auth::user();
-        $data_buku_fav = $user->favorites()->with('buku')->paginate(5);
+        $favoriteBooks = $user->favorites()->with('buku')->paginate(5);
         $jumlah_buku = $user->favorites->count();
 
-        return view('buku.fav', compact('data_buku_fav', 'jumlah_buku'));
+        return view('buku.favorite', compact('favoriteBooks', 'jumlah_buku'));
     } else {
         // Handle the case when the user is not logged in
-        // You can redirect to the login page or perform any other action
-        // For example:
-        return redirect()->route('login')->with('error', 'You need to log in to view your favorite books.');
+        return redirect()->route('login')->with('pesan', 'You need to log in to view your favorite books.');
     }
 }
 }
