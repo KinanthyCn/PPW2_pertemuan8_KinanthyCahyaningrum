@@ -45,6 +45,6 @@ class User extends Authenticatable
     ];
     public function favorites()
     {
-        return $this->belongsToMany(Buku::class, 'favorites', 'user_id', 'buku_id')->withTimestamps();
+        return $this->hasMany(Favorite::class);
     }
 }

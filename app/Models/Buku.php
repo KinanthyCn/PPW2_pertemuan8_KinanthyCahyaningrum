@@ -30,9 +30,9 @@ class Buku extends Model
     {
         return $this->hasMany(Rating::class);
     }
-    public function favoritedBy()
+    public function favorites()
     {
-        return $this->belongsToMany(User::class, 'favorites')->withTimestamps();
+        return $this->hasMany(Favorite::class);
     }
 
 

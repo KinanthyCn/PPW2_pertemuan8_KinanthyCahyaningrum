@@ -33,6 +33,21 @@
         .book-info p {
             font-size: 16px;
         }
+        /* Tambahkan gaya untuk tombol +Favourite */
+        button.bg-yellow-500 {
+            background-color: #FFD700; /* Warna kuning sesuai dengan kelas bg-yellow-500 */
+            color: #fff; /* Warna teks putih */
+            border: none; /* Hapus border */
+            padding: 10px 15px; /* Sesuaikan padding sesuai kebutuhan */
+            border-radius: 5px; /* Tambahkan sudut melengkung */
+            cursor: pointer; /* Ganti kursor saat dihover menjadi pointer */
+            transition: background-color 0.3s ease; /* Efek transisi perubahan warna latar belakang */
+        }
+
+        button.bg-yellow-500:hover {
+            background-color: #FFC700; /* Warna kuning yang berbeda saat tombol dihover */
+        }
+
     </style>
 </head>
 <body>
@@ -69,6 +84,14 @@
                 <p><strong>Penulis:</strong> {{ $data_buku->penulis }}</p>
                 <p><strong>Harga:</strong> {{ $data_buku->harga }}</p>
                 <p><strong>Tanggal Terbit:</strong> {{ $data_buku->tgl_terbit }}</p>
+                <hr class="my-4">
+                    <form action="{{ route('buku.favorite', $data_buku->id) }}" method="post">
+                        @csrf
+                        <button type="submit" class="bg-yellow-500">
+                            + Favourite
+                        </button>
+                    </form>
+                    <br>
                 <form id="ratingForm" action="{{ route('buku.rating', $data_buku->id) }}" method="POST">
                     @csrf
                     <label for="rating">Rating: </label>
@@ -88,22 +111,6 @@
                                     No rating available
                                 @endif
                             </p>
-                <span class="ml-2">{{ $data_buku->judul }}</span>
-@if(Auth::check() && Auth::user()->favorites && Auth::user()->favorites->contains($data_buku))
-    <!-- Buku sudah ada di favorit -->
-    <span class="ml-auto mr-2">
-        <i class="fas fa-heart text-danger text-right"></i>
-    </span>
-@else
-    <!-- Tambahkan ke favorit -->
-    <form action="{{ route('buku.favorit', $data_buku->id) }}" method="POST" style="display: inline;">
-        @csrf
-        <button type="submit" class="btn btn-link">
-            <i class="far fa-heart text-danger"></i> Tambahkan ke Favorit
-        </button>
-    </form>
-@endif
-
             </div>
         </section>
     </div>
