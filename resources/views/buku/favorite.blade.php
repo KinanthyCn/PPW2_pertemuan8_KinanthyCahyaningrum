@@ -10,54 +10,52 @@
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
 
-
                     <div class="container" style="margin-top: 5%">
                         @if(Session::has('pesan'))
-                        <div class="alert alert-success fade show" id="success-alert" role="alert">{{ Session::get('pesan') }}</div>
+                            <div class="alert alert-success fade show" id="success-alert" role="alert">{{ Session::get('pesan') }}</div>
                         @endif
 
                         @if(count($errors) > 0)
-                        <ul class="alert alert-danger">
-                            @foreach ($errors->all() as $error)
-                            <li style="list-style: none;">{{ $error }}</li>
-                            @endforeach
-                        </ul>
+                            <ul class="alert alert-danger">
+                                @foreach ($errors->all() as $error)
+                                    <li style="list-style: none;">{{ $error }}</li>
+                                @endforeach
+                            </ul>
                         @endif
 
                         <div class="card">
                             <div class="card-body">
 
-                                <table class="table table-striped table-bordered table-fixed">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">ID</th>
-                                            <th scope="col">Thumbnail</th>
-                                            <th scope="col">Judul Buku</th>
-                                            <th scope="col">Penulis</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach($favoriteBooks as $data_favorite)
-                                        <tr>
-                                            <td>{{ $data_favorite->buku->id }}</td>
-                                            <td>
-                                                <a href="{{ route('buku.showFavorite', $data_favorite->buku->id) }}">
-                                                    <div class="flex items-center">
-                                                        @if ($data_favorite->buku->filepath)
-                                                        <div class="relative h-10 w-10">
-                                                            <img class="h-full w-full rounded-full object-cover object-center"
-                                                                src="{{ asset($data_favorite->buku->filepath) }}" alt="thumbnail" />
-                                                        </div>
-                                                        @endif
-                                                    </div>
-                                                </a>
-                                            <td>{{ $data_favorite->buku->judul }}
-                                            </td>
-                                            <td>{{ $data_favorite->buku->penulis }}</td>
-                                        </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered text-center">
+                                        <thead class="thead-dark">
+                                            <tr>
+                                                <th scope="col">ID</th>
+                                                <th scope="col">Thumbnail</th>
+                                                <th scope="col">Judul Buku</th>
+                                                <th scope="col">Penulis</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($favoriteBooks as $data_favorite)
+                                                <tr>
+                                                    <td>{{ $data_favorite->buku->id }}</td>
+                                                    <td>
+                                                        <a href="{{ route('buku.showFavorite', $data_favorite->buku->id) }}">
+                                                            @if ($data_favorite->buku->filepath)
+                                                                <div class="card" style="width: 8rem;">
+                                                                    <img class="card-img-top" src="{{ asset($data_favorite->buku->filepath) }}" alt="thumbnail">
+                                                                </div>
+                                                            @endif
+                                                        </a>
+                                                    </td>
+                                                    <td>{{ $data_favorite->buku->judul }}</td>
+                                                    <td>{{ $data_favorite->buku->penulis }}</td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -70,4 +68,8 @@
         </div>
     </div>
 </x-app-layout>
+
+
+
+
 
