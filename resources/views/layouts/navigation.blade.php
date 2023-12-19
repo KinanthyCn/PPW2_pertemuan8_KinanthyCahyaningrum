@@ -32,6 +32,11 @@
                         {{ __('Buku Favoritku') }}
                     </x-nav-link>
                 </div>
+                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                    <x-nav-link :href="route('buku.populer')" :active="request()->routeIs('bukuS')">
+                        {{ __('Buku Populer') }}
+                    </x-nav-link>
+                </div>
             </div>
 
             <!-- Settings Dropdown -->

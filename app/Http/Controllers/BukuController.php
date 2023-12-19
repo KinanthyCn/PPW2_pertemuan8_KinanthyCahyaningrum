@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\Rating;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\Kategori; // Add this line to import the Kategori class
 
 
 
@@ -65,6 +66,8 @@ class BukuController extends Controller
                 'filename' => $fileName,
                 'filepath' => '/storage/' . $filePath
             ]);
+
+
         } catch (\Throwable $th) {
             throw $th;
             DB::rollBack();
@@ -210,40 +213,7 @@ class BukuController extends Controller
         $data_buku= Buku::find($id);
         return view('buku.galbuku', compact('data_buku'));
     }
-    public function ratingBuku(Request $request, $id)
-    {
-        $data_buku = Buku::find($id);
-    
-        $existingRating = Rating::where('user_id', Auth::id())
-                                ->where('buku_id', $id)
-                                ->first();
-    
-        if ($existingRating) {
-            $request->validate([
-                'rating' => 'required|numeric|min:1|max:5',
-            ]);
-    
-            $existingRating->update([
-                'rating' => $request->rating,
-            ]);
-    
-            return redirect()->back()->with('pesan', 'Your rating has been updated successfully.');
-        }
-    
-        $request->validate([
-            'rating' => 'required|numeric|min:1|max:5',
-        ]);
-    
-        $newRating = new Rating([
-            'buku_id' => $id,
-            'user_id' => Auth::id(),
-            'rating' => $request->rating,
-        ]);
-    
-        $newRating->save();
-    
-        return redirect()->route('buku.galeri.buku', $id)->with('pesan', 'rating anda telah ditambahkan.');
-    }
+
     public function favoriteBuku($id)
 {
     if (Auth::check()) {
@@ -284,4 +254,73 @@ public function showFavoriteBuku()
         return redirect()->route('login')->with('pesan', 'You need to log in to view your favorite books.');
     }
 }
+
+// Contoh dalam KategoriController.php
+public function showBukuByKategori($kategoriId)
+{
+    $kategori = Kategori::findOrFail($kategoriId);
+    $bukus = $kategori->bukus()->paginate(10);
+
+    return view('buku.kategori', compact('kategori', 'bukus'));
 }
+
+public function ratingBuku(Request $request, $id)
+{
+    $data_buku = Buku::find($id);
+
+    $existingRating = Rating::where('user_id', Auth::id())
+                            ->where('buku_id', $id)
+                            ->first();
+
+    if ($existingRating) {
+        $request->validate([
+            'rating' => 'required|numeric|min:1|max:5',
+        ]);
+
+        $existingRating->update([
+            'rating' => $request->rating,
+        ]);
+
+        return redirect()->back()->with('pesan', 'Your rating has been updated successfully.');
+    }
+
+    $request->validate([
+        'rating' => 'required|numeric|min:1|max:5',
+    ]);
+
+    $newRating = new Rating([
+        'buku_id' => $id,
+        'user_id' => Auth::id(),
+        'rating' => $request->rating,
+    ]);
+
+    $newRating->save();
+
+    return redirect()->route('buku.galeri.buku', $id)->with('pesan', 'rating anda telah ditambahkan.');
+}
+public function bukuPopuler()
+{
+    // Ambil 10 rating tertinggi
+    $topRatings = Rating::select('buku_id', DB::raw('AVG(rating) as average_rating'))
+        ->groupBy('buku_id')
+        ->orderByDesc('average_rating')
+        ->take(10)
+        ->get();
+
+    // Ambil detail buku berdasarkan ID dari 10 rating tertinggi
+    $topBooks = [];
+    foreach ($topRatings as $rating) {
+        $buku = Buku::find($rating->buku_id);
+        if ($buku) {
+            $topBooks[] = [
+                'judul' => $buku->judul,
+                'rating' => $rating->average_rating,
+            ];
+        }
+    }
+
+    // Kirim data ke halaman Buku Populer
+    return view('buku.populer', ['topBooks' => $topBooks]);
+}
+}
+

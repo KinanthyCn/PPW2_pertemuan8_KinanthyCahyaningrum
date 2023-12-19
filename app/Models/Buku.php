@@ -5,8 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Gallery;
+use App\Models\Kategori; // Add this line to import the Kategori class
+use App\Models\Rating;
+use App\Models\Favorite;
 
 class Buku extends Model
+
 {
     use HasFactory;
     protected $table = 'buku';
@@ -17,7 +21,6 @@ class Buku extends Model
         'tgl_terbit',
         'filename',
         'filepath'
-
     ];
     protected $dates =['tgl_terbit'];
     public function galeri(){
@@ -34,6 +37,18 @@ class Buku extends Model
     {
         return $this->hasMany(Favorite::class);
     }
+    // Buku.php
 
+    public function kategoris()
+    {
+        return $this->hasMany(Kategori::class);
+    }
 
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
 }
+
+
+

@@ -114,6 +114,34 @@
             </div>
         </section>
     </div>
+    <div class="container">
+    <section id="reviews" class="py-5">
+        <div class="container">
+            <h2 class="mb-4">Reviews</h2>
+            <hr>
+            
+            <!-- Tampilkan daftar review -->
+            @forelse ($data_buku->reviews as $review)
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ $review->user->name }}</h5>
+                        <p class="card-text">{{ $review->content }}</p>
+                        
+                        @if ($review->moderation_status === 'approved')
+                            <span class="badge badge-success">Approved</span>
+                        @elseif ($review->moderation_status === 'rejected')
+                            <span class="badge badge-danger">Rejected</span>
+                        @else
+                            <span class="badge badge-warning">Pending</span>
+                        @endif
+                    </div>
+                </div>
+            @empty
+                <p>No reviews available.</p>
+            @endforelse
+        </div>
+    </section>
+</div>
     
 
     <script src="{{ asset('dist/js/lightbox-plus-jquery.min.js') }}"></script>

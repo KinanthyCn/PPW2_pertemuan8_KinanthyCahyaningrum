@@ -3,7 +3,10 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\BukuController;
 use App\Http\Controllers\PublicController;
+use App\Http\Controllers\RatingController;
+use App\Http\Controllers\ReviewController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\KategoriController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,6 +42,10 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/buku/favorite', [BukuController::class, 'showFavoriteBuku'])->name('buku.showFavorite');
     Route::post('/buku/favorite/{id}', [BukuController::class, 'favoriteBuku'])->name('buku.favorite');
+    Route::resource('kategori', KategoriController::class);
+    // Rute untuk menampilkan daftar buku berdasarkan kategori
+    Route::get('kategori/{kategori}/buku', [KategoriController::class, 'showBukuByKategori'])->name('kategori.showBuku');
+
 
 
 
@@ -53,12 +60,17 @@ Route::middleware('auth')->group(function () {
         //store update
         Route::post('/buku/update/{id}', [BukuController::class, 'update'])->name('buku.update');
         Route::get('/buku/delete-gallery/{id}', [BukuController::class, 'deleteGallery'])->name('buku.delete-gallery');
+        Route::resource('kategori', KategoriController::class);
+        // Rute untuk menampilkan daftar buku berdasarkan kategori
+        Route::get('kategori/{kategori}/buku', [KategoriController::class, 'showBukuByKategori'])->name('kategori.showBuku');
     });
     
 
 });
     Route::get('/list_buku', [PublicController::class, 'showList'])->name('buku.list_buku');
     Route::get('/detail_buku/{id}', [PublicController::class, 'galbuku'])->name('buku.galeri.buku');
+    Route::GET('/buku-populer', [BukuController::class, 'bukuPopuler'])->name('buku.populer');
+
 
 require __DIR__.'/auth.php';
 
